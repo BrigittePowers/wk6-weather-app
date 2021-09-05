@@ -1,0 +1,20 @@
+:root {
+    --placeholdervariable: something;
+}
+
+button {
+    cursor: pointer;
+}
+
+button,
+input {
+    border: none;
+    background: none;
+    outline: none;
+    color: inherit;
+}
+
+ul {
+    list-style: none;
+}
+
