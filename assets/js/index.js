@@ -1,11 +1,11 @@
-// https://openweathermap.org/api/one-call-api
-
 var search = document.querySelector(".search-form");
 var cityInput = document.querySelector(".search-form input");
 
 //open weather API
 var apiKey = "95dda93988614202cb796a38de218adc";
 var city;
+var units = "&units=imperial";
+var unitsIcon = "°F"
 
 // user searches a city by submitting the form
 search.addEventListener("submit", async function(event){
@@ -20,14 +20,55 @@ search.addEventListener("submit", async function(event){
     var cityLon = cityLoc[1];
 
     // feed location data into open weather one call API
-    var cityForecast = getCityWeather(cityLon, cityLat)
+    var cityForecast = await getCityWeather(cityLat, cityLon);
 
     // display data to user
-    
+    dataDisplay(cityForecast);
 
     // if the city is not on the cities list, add it
 
 });
+
+function dataDisplay (data) {
+    //make elements
+    var forecastDisplay = document.querySelector(".search-list");
+    var bubbleData = document.createElement("ul");
+    bubbleData.classList.add("data-bubble");
+    var dailyData = document.createElement("ul");
+    dailyData.classList.add("data-daily");
+
+    //bubbleData list items
+    var iconDis = document.createElement("li");
+    var cityDis = document.createElement("li");
+    var descDis = document.createElement("li");
+    var tempDis = document.createElement("li");
+
+    //bubble data innerHTML
+    iconDis.innerHTML = "<img src= http://openweathermap.org/img/wn/" + data.current.weather[0].icon + "@2x.png></img>"; //weather icon
+    cityDis.innerHTML = city; // city name
+    descDis.innerHTML = data.current.weather[0].description; //desc
+    tempDis.innerHTML = Math.trunc(data.current.temp) + "<sup>" + unitsIcon + "</sup>"; //temperature
+
+    //bubble data append
+    forecastDisplay.appendChild(bubbleData);
+    bubbleData.appendChild(iconDis);
+    bubbleData.appendChild(cityDis);
+    bubbleData.appendChild(descDis);
+    bubbleData.appendChild(tempDis);
+
+    // daily list items
+
+    // daily data innerHTML
+        //date
+        //humidity
+        //wind speed
+        //UV index - color by severity
+
+    // daily data append
+    forecastDisplay.appendChild(dailyData);
+
+
+}
 
 // retrieve lat/lon
 async function getCityLocation(city) {
@@ -40,16 +81,17 @@ async function getCityLocation(city) {
     return cityLoc
 }
 
-// one call API
-function getCityWeather(lon, lat) {
-    var oneCallURL = "https://api.openweathermap.org/data/2.5/onecall?lat=" + lat + "&lon=" + lon + "&exclude=minutely&appid=" + apiKey;
+// one call API data
+function getCityWeather(lat, lon) {
+    var oneCallURL = "https://api.openweathermap.org/data/2.5/onecall?lat=" + lat + "&lon=" + lon + "&exclude=minutely&appid=" + apiKey + units;
 
-    fetch(oneCallURL)
+    return fetch(oneCallURL)
         .then(function (response) {
             return response.json();
         })
         .then(function (data) {
             console.log(data);
+            return data;
         })
 }
 
@@ -59,27 +101,8 @@ function getCityWeather(lon, lat) {
 
 // User views current weather conditions for that city
 
-// User presented with city name
-
-// ... date
-
-// ... icon representation of conditions
-
-// ... the temperature
-
-// ... the humidity
-
-// ... wind speed
-
-// ... UV index
-
-// User views UV index
-
-// Presented with color that indicates whether conditions are favorable/moderate/severe
-
 // User views future weather data for that city
 
 // Presented with current and future conditions for that city
-
 
 // API call for hourly 4-day forecast
