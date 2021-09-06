@@ -1,7 +1,7 @@
 var search = document.querySelector(".search-form");
 var cityInput = document.querySelector(".search-form input");
 var display = document.querySelector(".search-list");
-var cityList = localStorage.getItem("cities");
+var cityList = [localStorage.getItem("cities")];
 
 //open weather API
 var apiKey = "95dda93988614202cb796a38de218adc";
@@ -24,11 +24,11 @@ search.addEventListener("submit", async function(event){
     city = cityInput.value;
 
     //local storage of city list
-    if (cityList === undefined) { //if list is empty, create it
+    if (cityList.length === 0) { //if list is empty, create it
         localStorage.setItem("cities", city);
     } else {
-        cityList.append(city);
-        localStorage.setItem("cities", cityList)
+        cityList.push(city);
+        localStorage.setItem("cities", cityList);
     }
 
     // wait while fetch request returns latitude and longitude
