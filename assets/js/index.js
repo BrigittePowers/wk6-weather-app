@@ -1,6 +1,7 @@
 var search = document.querySelector(".search-form");
 var cityInput = document.querySelector(".search-form input");
 var display = document.querySelector(".search-list");
+var cityList = localStorage.getItem("cities");
 
 //open weather API
 var apiKey = "95dda93988614202cb796a38de218adc";
@@ -12,10 +13,23 @@ var unitsIcon = "°F"
 search.addEventListener("submit", async function(event){
     event.preventDefault();
 
+    //if city list is empty, create it
+    //if city list contains data, check if city is already on it
+    //add city to list
+
+    //reset forecast display
     display.innerHTML = "";
 
     // record user's city
     city = cityInput.value;
+
+    //local storage of city list
+    if (cityList === undefined) { //if list is empty, create it
+        localStorage.setItem("cities", city);
+    } else {
+        cityList.append(city);
+        localStorage.setItem("cities", cityList)
+    }
 
     // wait while fetch request returns latitude and longitude
     var cityLoc = await getCityLocation(city);
@@ -37,9 +51,7 @@ function forecastDisplay (data) {
     var bubbleData = document.createElement("ul");
     bubbleData.classList.add("data-bubble");
     var dailyData = document.createElement("ul");
-    dailyData.classList.add("data-daily");
-    var weeklyData = document.createElement("ul");
-    weeklyData.classList.add("data-weekly");
+    dailyData.classList.add("data-daily","forecast-box");
 
     //calculate time stamps
     var dayname = new Date(data.daily[0].dt * 1000).toLocaleDateString("en", {
@@ -87,6 +99,8 @@ function forecastDisplay (data) {
     // 4 days out
     for (i = 1; i < 5; i++) {
         // create elements
+        var weeklyData = document.createElement("ul");
+        weeklyData.classList.add("data-weekly","forecast-box");
 
         var day = new Date(data.daily[i].dt * 1000).toLocaleDateString("en", {
             weekday: "long",
@@ -147,11 +161,3 @@ function getCityWeather(lat, lon) {
 }
 
 // City is added to search history - local storage
-
-// User views current weather conditions for that city
-
-// User views future weather data for that city
-
-// Presented with current and future conditions for that city
-
-// API call for hourly 4-day forecast
