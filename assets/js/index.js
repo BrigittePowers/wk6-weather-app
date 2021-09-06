@@ -1,40 +1,56 @@
 // https://openweathermap.org/api/one-call-api
 
 var search = document.querySelector(".search-form");
-var searchInput = document.querySelector(".search-form input");
+var cityInput = document.querySelector(".search-form input");
 
 //open weather API
-var apiKey = "1cb7c69e383c2b520c672451a8fbde1a";
+var apiKey = "95dda93988614202cb796a38de218adc";
+var city;
 
-// User searches a city
-search.addEventListener("submit", function(event){
+// user searches a city by submitting the form
+search.addEventListener("submit", async function(event){
     event.preventDefault();
-    
-    // user submits a city search request
-    var city = searchInput.value;
 
-    // fetch data from the api
-    getCityForecast(city);
+    // record user's city
+    city = cityInput.value;
+
+    // wait while fetch request returns latitude and longitude
+    var cityLoc = await getCityLocation(city);
+    var cityLat = cityLoc[0];
+    var cityLon = cityLoc[1];
+
+    // feed location data into open weather one call API
+    var cityForecast = getCityWeather(cityLon, cityLat)
 
     // display data to user
+    
 
     // if the city is not on the cities list, add it
 
-
-
 });
 
-// Hourly Forecast
-function getCityForecast(city) {
-    var requestURL = "https://api.openweathermap.org/data/2.5/onecall?lat={lat}&lon={lon}&exclude={part}&appid={API key}"
-    fetch(requestURL + city + "&appid=" + apiKey)
+// retrieve lat/lon
+async function getCityLocation(city) {
+    var queryURL = "http://api.openweathermap.org/data/2.5/weather?q=" + city + "&appid=" + apiKey;
+
+    var response = await fetch(queryURL);
+    var data = await response.json();  
+
+    var cityLoc = [data.coord.lat, data.coord.lon];
+    return cityLoc
+}
+
+// one call API
+function getCityWeather(lon, lat) {
+    var oneCallURL = "https://api.openweathermap.org/data/2.5/onecall?lat=" + lat + "&lon=" + lon + "&exclude=minutely&appid=" + apiKey;
+
+    fetch(oneCallURL)
         .then(function (response) {
             return response.json();
         })
         .then(function (data) {
-            console.log(data)
+            console.log(data);
         })
-
 }
 
 // User presented with current and future conditions for that city
@@ -65,12 +81,5 @@ function getCityForecast(city) {
 
 // Presented with current and future conditions for that city
 
-
-
-var cityName = "";
-
-var stateCode = "";
-
-var countryCode ="";
 
 // API call for hourly 4-day forecast
