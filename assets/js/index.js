@@ -1,7 +1,7 @@
 var search = document.querySelector(".search-form");
 var cityInput = document.querySelector(".search-form input");
 var display = document.querySelector(".search-list");
-var cityList = [localStorage.getItem("cities")];
+var cityList;
 
 //open weather API
 var apiKey = "95dda93988614202cb796a38de218adc";
@@ -13,23 +13,29 @@ var unitsIcon = "°F"
 search.addEventListener("submit", async function(event){
     event.preventDefault();
 
-    //if city list is empty, create it
-    //if city list contains data, check if city is already on it
-    //add city to list
-
     //reset forecast display
     display.innerHTML = "";
 
     // record user's city
     city = cityInput.value;
 
-    //local storage of city list
-    if (cityList.length === 0) { //if list is empty, create it
-        localStorage.setItem("cities", city);
+    //locally store search history
+    var cityStorage = JSON.parse(localStorage.getItem("cities"));
+
+    // if cityStorage exists already and city is not yet on list
+    if (cityStorage !==null && city.indexOf(cityStorage) == -1) {
+        //add city to list
+        cityList = cityStorage.concat(city);
+        // keep list at no more than 5 searches
+        if (cityList.length > 5) {
+            cityList = cityList.slice(1);
+        }
+    // otherwise start a new list using the city
     } else {
-        cityList.push(city);
-        localStorage.setItem("cities", cityList);
+        cityList = [city];
     }
+
+    localStorage.setItem("cities", JSON.stringify(cityList));
 
     // wait while fetch request returns latitude and longitude
     var cityLoc = await getCityLocation(city);
@@ -47,57 +53,14 @@ search.addEventListener("submit", async function(event){
 });
 
 function forecastDisplay (data) {
-    //make elements
-    var bubbleData = document.createElement("ul");
-    bubbleData.classList.add("data-bubble");
-    var dailyData = document.createElement("ul");
-    dailyData.classList.add("data-daily","forecast-box");
 
     //calculate time stamps
     var dayname = new Date(data.daily[0].dt * 1000).toLocaleDateString("en", {
         weekday: "long",
     });
 
-    //bubbleData list items
-    var iconDis = document.createElement("li");
-    var cityDis = document.createElement("li");
-    var descDis = document.createElement("li");
-    var tempDis = document.createElement("li");
-
-    //bubble data innerHTML
-    iconDis.innerHTML = "<img src= http://openweathermap.org/img/wn/" + data.daily[0].weather[0].icon + "@2x.png></img>"; //weather icon
-    cityDis.innerHTML = city; // city name
-    descDis.innerHTML = data.daily[0].weather[0].description; //desc
-    tempDis.innerHTML = Math.trunc(data.daily[0].temp.max) + "<sup>" + unitsIcon + "</sup> - " + Math.trunc(data.daily[0].temp.min) + "<sup>" + unitsIcon + "</sup>"; //temperature
-
-    //bubble data append
-    display.appendChild(bubbleData);
-    bubbleData.appendChild(iconDis);
-    bubbleData.appendChild(cityDis);
-    bubbleData.appendChild(descDis);
-    bubbleData.appendChild(tempDis);
-
-    // daily list items
-    var dateDis = document.createElement("li");
-    var humidDis = document.createElement("li");
-    var windDis = document.createElement("li");
-    var uvDis = document.createElement("li");
-
-    // daily data innerHTML
-        dateDis.innerHTML = dayname; //date
-        humidDis.innerHTML = "Humidity: " + data.daily[0].humidity + "%";//humidity
-        windDis.innerHTML = "Wind: " + data.daily[0].wind_speed + " mph"//wind speed
-        uvDis.innerHTML = "UV Index: " + data.daily[0].uvi + " - " //UV index //TODO: color uvi by severity
-
-    // daily data append
-    display.appendChild(dailyData);
-    dailyData.appendChild(dateDis);
-    dailyData.appendChild(humidDis);
-    dailyData.appendChild(windDis);
-    dailyData.appendChild(uvDis);
-
-    // 4 days out
-    for (i = 1; i < 5; i++) {
+    // 5 days out
+    for (i = 0; i < 5; i++) {
         // create elements
         var weeklyData = document.createElement("ul");
         weeklyData.classList.add("data-weekly","forecast-box");
