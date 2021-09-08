@@ -77,7 +77,7 @@ function forecastDisplay (data) {
         var windDisWeek = document.createElement("li");
         var uvDisWeek = document.createElement("li");
 
-        iconDisWeek.innerHTML = "<img src= http://openweathermap.org/img/wn/" + data.daily[i].weather[0].icon + "@2x.png></img>"; //weather icon
+        iconDisWeek.innerHTML = "<img src= https://openweathermap.org/img/wn/" + data.daily[i].weather[0].icon + "@2x.png></img>"; //weather icon
         descDisWeek.innerHTML = data.daily[i].weather[0].description; //desc
         tempDisWeek.innerHTML = Math.trunc(data.daily[i].temp.max) + "<sup>" + unitsIcon + "</sup> - " + Math.trunc(data.daily[0].temp.min) + "<sup>" + unitsIcon + "</sup>"; //temperature
         dateDisWeek.innerHTML = day; //date
@@ -100,7 +100,7 @@ function forecastDisplay (data) {
 
 // retrieve lat/lon
 async function getCityLocation(city) {
-    var queryURL = "http://api.openweathermap.org/data/2.5/weather?q=" + city + "&appid=" + apiKey;
+    var queryURL = "https://api.openweathermap.org/data/2.5/weather?q=" + city + "&appid=" + apiKey;
 
     var response = await fetch(queryURL);
     var data = await response.json();  
