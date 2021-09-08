@@ -2,12 +2,15 @@ var search = document.querySelector(".search-form");
 var cityInput = document.querySelector(".search-form input");
 var display = document.querySelector(".search-list");
 var cityList;
+var cityHistory = document.querySelector(".history");
 
 //open weather API
 var apiKey = "95dda93988614202cb796a38de218adc";
 var city;
 var units = "&units=imperial";
-var unitsIcon = "°F"
+var unitsIcon = "°F";
+
+history();
 
 // user searches a city by submitting the form
 search.addEventListener("submit", async function(event){
@@ -29,11 +32,14 @@ search.addEventListener("submit", async function(event){
         // keep list at no more than 5 searches
         if (cityList.length > 5) {
             cityList = cityList.slice(1);
+            
         }
     // otherwise start a new list using the city
     } else {
         cityList = [city];
     }
+
+    history();
 
     localStorage.setItem("cities", JSON.stringify(cityList));
 
@@ -78,13 +84,13 @@ function forecastDisplay (data) {
         var uvDisWeek = document.createElement("li");
 
         iconDisWeek.innerHTML = "<img src= https://openweathermap.org/img/wn/" + data.daily[i].weather[0].icon + "@2x.png></img>"; //weather icon
-        descDisWeek.innerHTML = data.daily[i].weather[0].description; //desc
-        tempDisWeek.innerHTML = Math.trunc(data.daily[i].temp.max) + "<sup>" + unitsIcon + "</sup> - " + Math.trunc(data.daily[0].temp.min) + "<sup>" + unitsIcon + "</sup>"; //temperature
-        dateDisWeek.innerHTML = day; //date
+        descDisWeek.innerHTML = "<span id='description'>" + data.daily[i].weather[0].description + "</span>"; //desc
+        tempDisWeek.innerHTML = "<span id='temp'>" + Math.trunc(data.daily[i].temp.max) + "<sup>" + unitsIcon + "</sup> - " + Math.trunc(data.daily[0].temp.min) + "<sup>" + unitsIcon + "</sup></span>"; //temperature
+        dateDisWeek.innerHTML = "<span id='day'>" + day + "</span>"; //date 
         humidDisWeek.innerHTML = "Humidity: " + data.daily[i].humidity + "%";//humidity
         windDisWeek.innerHTML = "Wind: " + data.daily[i].wind_speed + " mph"//wind speed
-        uvDisWeek.innerHTML = "UV Index: " + data.daily[i].uvi + " - " //UV index //TODO: color uvi by severity
-
+        uvDisWeek.innerHTML = "UV Index: <span id=uvi>" + data.daily[i].uvi + "</span>" //UV index
+        
         weeklyData.appendChild(iconDisWeek);
         weeklyData.appendChild(dateDisWeek);
         weeklyData.appendChild(descDisWeek);
@@ -92,6 +98,42 @@ function forecastDisplay (data) {
         weeklyData.appendChild(humidDisWeek);
         weeklyData.appendChild(windDisWeek);
         weeklyData.appendChild(uvDisWeek);
+
+        // color UVI
+         //Low 1-2
+        if (data.daily[i].uvi < 3) {
+            var indexLow = document.createElement("li");
+            indexLow.classList.add("low");
+            indexLow.innerHTML = "Low";
+            weeklyData.appendChild(indexLow);
+        //Moderate 3-5
+        } else if (data.daily[i].uvi >= 3 && data.daily[i].uvi < 6) {
+            var indexModerate = document.createElement("li");
+            indexModerate.classList.add("moderate");
+            indexModerate.innerHTML = "Moderate";
+            weeklyData.appendChild(indexModerate);
+        //High 6-7
+        } else if (data.daily[i].uvi >= 6 && data.daily[i].uvi < 8) {
+            var indexHigh = document.createElement("li");
+            indexHigh.classList.add("high");
+            indexHigh.innerHTML = "High";
+            weeklyData.appendChild(indexHigh);
+        // V High 8-10
+        } else if (data.daily[i].uvi >= 8 && data.daily[i].uvi < 11) {
+            var indexVHigh = document.createElement("li");
+            indexVHigh.classList.add("very-high");
+            indexVHigh.innerHTML = "Very High";
+            weeklyData.appendChild(indexVHigh);
+        //Extreme
+        } else if (data.daily[i].uvi >= 11) {
+            var indexExtreme = document.createElement("li");
+            indexExtreme.classList.add("extreme");
+            indexExtreme.innerHTML = "Extreme";
+            weeklyData.appendChild(indexExtreme);
+        } 
+        //High 6-7
+        //V High 8-10
+        //Extreme 11+
 
         display.appendChild(weeklyData);
     }
@@ -123,4 +165,21 @@ function getCityWeather(lat, lon) {
         })
 }
 
-// City is added to search history - local storage
+//history
+function history() {
+    cityHistory.innerHTML = "";
+
+    if (cityList !== undefined) {
+        for (i=0; i < cityList.length; i++) {
+            var cityButton = document.createElement("button");
+            cityButton.innerHTML = cityList[i];
+            cityButton.value = cityList[i];
+            cityHistory.appendChild(cityButton);
+        }
+        cityHistory.addEventListener("click", function(event) {
+            event.preventDefault();
+            cityInput.value = cityButton.value;
+        })
+    }
+    
+}

@@ -8,14 +8,17 @@
 body {
     background-image: url(../art/raindropsseamless.jpg);
     height: 100vw;
+    font-family: 'Indie Flower', cursive;
 }
 
 header {
-    width: 60%;
+    width: 80%;
+    font-family: 'Allison', cursive;
+    font-size: 150%;
 }
 
 main {
-    width: 60%;
+    width: 80%;
 }
 
 .wrapper {
@@ -47,7 +50,8 @@ main {
     background-color: rgb(223, 221, 230);
     border-top-left-radius: 25px;
     border-top-right-radius: 25px;
-    filter: drop-shadow(7px 7px 0px #957DAD)
+    filter: drop-shadow(7px 7px 0px #957DAD);
+    font-family: 'Indie Flower', cursive;
 }
 
 .search-form button {
@@ -55,7 +59,19 @@ main {
     font-size: 150%;
     border-bottom-left-radius: 25px;
     border-bottom-right-radius: 25px;
-    filter: drop-shadow(7px 7px 0px #957DAD)
+    filter: drop-shadow(7px 7px 0px #957DAD);
+    font-family: 'Indie Flower', cursive;
+}
+
+.history {
+    display: flex;
+    justify-content: space-evenly;
+}
+
+.history button {
+    margin-top: 2%;
+    border-radius: 25%;
+    width: 150px;
 }
 
 button {
@@ -76,7 +92,7 @@ ul {
 
 .search-list {
     display: flex;
-    justify-content: space-evenly;
+    justify-content: space-between;
 }
 
 .forecast-box {
@@ -90,4 +106,89 @@ ul {
     background-color: #FFDFD3;
     filter: drop-shadow(7px 7px 0px #957DAD);
     padding: 4%;
+    width: 10%;
+}
+
+@media screen and (max-width: 900px) {
+    .header {
+        width: 90%;
+    }
+
+    .main {
+        width: 90%;
+    }
+    
+    .search-list {
+    flex-direction: column;
+    }
+
+    .forecast-box {
+        width: 92%;
+    }
+
+    .forecast-box li {
+        font-size: 180%;
+    }
+
+    .history {
+        flex-flow: row wrap;
+    }
+}
+
+.forecast-box li {
+    padding-bottom: 7%;
+}
+
+#day {
+    font-size: 150%;
+    font-weight: 900;
+}
+
+#description {
+    font-size: 100%;
+    font-style: italic;
+}
+
+#temp {
+    font-size: 150%;
+}
+
+.low {
+    background-color: rgb(18, 129, 124);
+    padding-top: 7%;
+    border-radius: 25px;
+    width: 100%;
+    color: #eee;
+}
+
+.moderate {
+    background-color: rgb(175, 145, 88);
+    padding-top: 7%;
+    border-radius: 25px;
+    width: 100%;
+    color: #eee;
+}
+
+.high {
+    background-color: rgb(155, 94, 25);
+    padding-top: 7%;
+    border-radius: 25px;
+    width: 100%;
+    color: #eee;
+}
+
+.very-high {
+    background-color: rgb(155, 25, 79);
+    padding-top: 7%;
+    border-radius: 25px;
+    width: 100%;
+    color: #eee;
+}
+
+.extreme {
+    background-color: rgb(129, 25, 155);
+    padding-top: 7%;
+    border-radius: 25px;
+    width: 100%;
+    color: #eee;
 }

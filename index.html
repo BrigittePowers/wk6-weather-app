@@ -5,6 +5,10 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Calming Colors Weather Tracker</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Allison&display=swap" rel="stylesheet"> 
+    <link href="https://fonts.googleapis.com/css2?family=Indie+Flower&display=swap" rel="stylesheet"> 
     <link rel="stylesheet" href="./assets/css/index.css">
 </head>
 <body>
@@ -15,9 +19,9 @@
         <main>
             <section class="city-seach">
                 <form class="search-form">
-                    <input type="text" autofocus placeholder="Enter any US city name...">
+                    <input type="text" id=textfield autofocus placeholder="Enter any US city name...">
                     <button type="submit">Search</button>
-                    <span class="warning-msg"></span>
+                    <div class="history"></div>
                 </form>
                 <div class="search-list">
                 </div> 
