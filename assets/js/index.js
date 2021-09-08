@@ -172,13 +172,16 @@ function history() {
     if (cityList !== undefined) {
         for (i=0; i < cityList.length; i++) {
             var cityButton = document.createElement("button");
+            cityButton.classList.add("known-cities");
             cityButton.innerHTML = cityList[i];
             cityButton.value = cityList[i];
             cityHistory.appendChild(cityButton);
         }
+        
         cityHistory.addEventListener("click", function(event) {
+            //var cityBtn = document.querySelectorAll(".known-cities");
             event.preventDefault();
-            cityInput.value = cityButton.value;
+            //cityInput.value = cityBtn.innerHTML;
         })
     }
     
