@@ -10,7 +10,7 @@ var city;
 var units = "&units=imperial";
 var unitsIcon = "°F";
 
-history();
+document.onload = history();
 
 // user searches a city by submitting the form
 search.addEventListener("submit", async function(event){
@@ -20,13 +20,13 @@ search.addEventListener("submit", async function(event){
     display.innerHTML = "";
 
     // record user's city
-    city = cityInput.value;
+    city = titlecase(cityInput.value);
 
     //locally store search history
     var cityStorage = JSON.parse(localStorage.getItem("cities"));
 
     // if cityStorage exists already and city is not yet on list
-    if (cityStorage !==null && city.indexOf(cityStorage) == -1) {
+    if (cityStorage !==null && cityStorage.indexOf(city) === -1) {
         //add city to list
         cityList = cityStorage.concat(city);
         // keep list at no more than 5 searches
@@ -35,7 +35,7 @@ search.addEventListener("submit", async function(event){
             
         }
     // otherwise start a new list using the city
-    } else {
+    } else if (cityStorage == null) {
         cityList = [city];
     }
 
@@ -172,17 +172,30 @@ function history() {
     if (cityList !== undefined) {
         for (i=0; i < cityList.length; i++) {
             var cityButton = document.createElement("button");
-            cityButton.classList.add("known-cities");
+            cityButton.setAttribute("value", cityList[i]);
             cityButton.innerHTML = cityList[i];
-            cityButton.value = cityList[i];
             cityHistory.appendChild(cityButton);
+            
+            //closure fix
+            var c = cityButton
+            if (typeof cityButton.addEventListener === 'function'){
+                (function (c) {
+                    c.addEventListener("click", function() {
+                        cityInput.value = c.value;
+                    });
+                })(c);
+            }
         }
         
-        cityHistory.addEventListener("click", function(event) {
-            //var cityBtn = document.querySelectorAll(".known-cities");
-            event.preventDefault();
-            //cityInput.value = cityBtn.innerHTML;
-        })
     }
     
+}
+
+// titlecase user entry
+function titlecase(str) {
+    str = str.toLowerCase().split(' ');
+    for (var i = 0; i < str.length; i++) {
+        str[i] = str[i].charAt(0).toUpperCase() + str[i].slice(1);
+    }
+    return str.join(' ');
 }
