@@ -11,8 +11,9 @@ SO THAT I can plan a trip accordingly
 ```
 
 ## Mock-Up
+https://brigittepowers.github.io/wk6-weather-app/
 
-The following image shows the web application's appearance and functionality:
+The following image shows the web application's appearance and functionality: 
 
 ![0a50c8133e](https://user-images.githubusercontent.com/86506686/132463213-1e3560c0-f9c8-4ce4-a3f7-c7a7d59172ec.jpg)
 
